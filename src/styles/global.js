@@ -1,5 +1,5 @@
 /* eslint no-unused-expressions: 0 */
-import { injectGlobal } from 'emotion';
+import { injectGlobal } from 'emotion'
 
 injectGlobal`
   *, *:before, *:after {
@@ -11,7 +11,6 @@ injectGlobal`
     box-sizing: border-box;
     -ms-overflow-style: scrollbar;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background-color: #161719;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -21,4 +20,10 @@ injectGlobal`
     margin: 0;
     padding: 0;
   }
-`;
+  body {
+    font-family: 'Caveat', cursive;
+    /* font-family: 'Dawning of a New Day', cursive; */
+    /* font-family: 'Just Another Hand', cursive; */
+    /* font-family: 'Kavivanar', cursive; */
+  }
+`
