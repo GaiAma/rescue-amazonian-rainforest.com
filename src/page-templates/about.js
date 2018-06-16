@@ -33,6 +33,8 @@ export const query = graphql`
     $lang: String!
     $path: String!
   ) {
+    ...mainMenu
+
     page: markdownRemark(
       fields: { slug: { eq: $path } }
       frontmatter: { lang: { eq: $lang } }

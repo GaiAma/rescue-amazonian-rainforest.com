@@ -20,10 +20,4 @@ injectGlobal`
     margin: 0;
     padding: 0;
   }
-  body {
-    font-family: 'Caveat', cursive;
-    /* font-family: 'Dawning of a New Day', cursive; */
-    /* font-family: 'Just Another Hand', cursive; */
-    /* font-family: 'Kavivanar', cursive; */
-  }
 `

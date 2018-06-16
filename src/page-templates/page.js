@@ -14,11 +14,8 @@ const renderAst = new rehypeReact({
 }).Compiler
 
 /* eslint-disable */
-const Page = props => (
-  <MainLayout>
-    {console.log(props)}
-    {renderAst(props.data.page.htmlAst)}
-  </MainLayout>
+const Page = ({ data: { mainMenu, page, ...rest }, ...props }) => (
+  <MainLayout mainMenu={mainMenu}>{renderAst(page.htmlAst)}</MainLayout>
 )
 
 Page.propTypes = {
@@ -33,6 +30,8 @@ export const query = graphql`
     $lang: String!
     $path: String!
   ) {
+    ...mainMenu
+
     page: markdownRemark(
       fields: { slug: { eq: $path } }
       frontmatter: { lang: { eq: $lang } }

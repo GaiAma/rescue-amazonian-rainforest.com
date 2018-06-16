@@ -4,10 +4,9 @@ const slugify = require(`slugify`)
 const isPage = node =>
   node.internal.type === `MarkdownRemark` &&
   node.fileAbsolutePath.includes(`/content/pages`) &&
-  node.frontmatter.slug
+  node.frontmatter.slug !== undefined
 
 exports.onCreateNode = ({ node, actions }) => {
-  // eslint-disable-next-line
   const { createNodeField } = actions
   // console.log(node)
   if (isPage(node)) {

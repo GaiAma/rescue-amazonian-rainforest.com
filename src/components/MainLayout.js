@@ -47,36 +47,68 @@ const Logo = styled(Img)`
   }
 `
 
+const SiteTitle = styled.h2`
+  color: ${colors.white};
+  font-size: 3rem;
+  text-shadow: 2px 2px 0px ${colors.black};
+
+  font-family: 'Caveat', cursive;
+  /* font-family: 'Dawning of a New Day', cursive; */
+  /* font-family: 'Just Another Hand', cursive; */
+  /* font-family: 'Kavivanar', cursive; */
+`
+
 const Main = styled.div`
   background: ${colors.white90};
   padding: 0.3rem 1.2rem;
 `
 
+const TwoColumns = styled.div`
+  display: flex;
+`
+
 class Wrapper extends React.Component {
   render() {
-    const { languages, bg, logo, children } = this.props
+    const { languages, mainMenu, bg, logo, children } = this.props
     return (
       <React.Fragment>
         {/* <SEO /> */}
-        {console.log(languages.edges)}
         <Container>
+          {console.log(`mainMenu`, mainMenu)}
           <Header>
             <Logo fluid={logo.image.fluid} />
-            <h2>Rescue Amazonian Rainforest</h2>
+            <SiteTitle>Rescue Amazonian Rainforest</SiteTitle>
           </Header>
 
-          <Main>{children}</Main>
+          <TwoColumns>
+            <ul>
+              {mainMenu &&
+                mainMenu.map(({ node: m }) => (
+                  <li key={m.fields.slug}>{m.frontmatter.title}</li>
+                ))}
+            </ul>
+            <Main>{children}</Main>
+          </TwoColumns>
         </Container>
 
         <Background>
           <Img fluid={bg.image.fluid} />
         </Background>
+
+        <footer>
+          {languages.length && (
+            <ul>
+              {languages.map(({ node: l }) => <li key={l.id}>{l.title}</li>)}
+            </ul>
+          )}
+        </footer>
       </React.Fragment>
     )
   }
 }
 Wrapper.propTypes = {
   languages: PropTypes.array.isRequired,
+  mainMenu: PropTypes.array.isRequired,
   bg: PropTypes.shape({
     image: PropTypes.object.isRequired,
   }).isRequired,
@@ -85,7 +117,7 @@ Wrapper.propTypes = {
   }).isRequired,
 }
 
-const MainLayout = ({ children }) => (
+const MainLayout = ({ mainMenu, children }) => (
   <StaticQuery
     query={graphql`
       query IndexQuery {
@@ -94,9 +126,11 @@ const MainLayout = ({ children }) => (
             node {
               id
               title
+              iso
             }
           }
         }
+
         bg: file(
           relativePath: {
             regex: "/35426598_2134176226801833_1481922592255246336_n.jpg/"
@@ -108,6 +142,7 @@ const MainLayout = ({ children }) => (
             }
           }
         }
+
         logo: file(relativePath: { regex: "/RAR_LOGO.*.png/" }) {
           image: childImageSharp {
             fluid(maxWidth: 201, quality: 75) {
@@ -118,11 +153,40 @@ const MainLayout = ({ children }) => (
       }
     `}
     render={({ languages, bg, logo }) => (
-      <Wrapper bg={bg} logo={logo} languages={languages.edges}>
+      <Wrapper
+        languages={languages.edges}
+        mainMenu={mainMenu.edges}
+        bg={bg}
+        logo={logo}
+      >
         {children}
       </Wrapper>
     )}
   />
 )
 
+MainLayout.propTypes = {
+  mainMenu: PropTypes.shape({
+    edges: PropTypes.array,
+  }),
+}
 export default MainLayout
+
+export const Fragments = graphql`
+  fragment mainMenu on RootQueryType {
+    mainMenu: allMarkdownRemark(
+      filter: { frontmatter: { menu: { eq: "main" }, lang: { eq: "en" } } }
+    ) {
+      edges {
+        node {
+          fields {
+            slug
+          }
+          frontmatter {
+            title
+          }
+        }
+      }
+    }
+  }
+`

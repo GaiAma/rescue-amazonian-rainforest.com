@@ -36,7 +36,7 @@
     "portfolio"
   ],
   "scripts": {
-    "dev": "gatsby develop -o",
+    "dev": "gatsby develop",
     "build": "gatsby build",
     "lint": "eslint . --ext .js,.jsx --ignore-path .gitignore",
     "lint:fix": "eslint . --ext .js,.jsx --fix --ignore-path .gitignore",
