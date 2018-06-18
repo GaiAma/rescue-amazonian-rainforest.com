@@ -1,6 +1,6 @@
-const { basename, dirname, resolve } = require(`path`)
+const { resolve } = require(`path`)
 const slugify = require(`slugify`)
-const { groupWith } = require(`ramda`)
+const { compose, groupWith, last, takeLast, head } = require(`ramda`)
 
 const isPage = node =>
   node.internal.type === `MarkdownRemark` &&
@@ -19,9 +19,7 @@ exports.onCreateNode = ({ node, actions }) => {
   }
 }
 
-// eslint-disable-next-line
 exports.createPages = async ({ actions, getNodes, graphql }) => {
-  // eslint-disable-next-line
   const { createPage, createNodeField } = actions
 
   // get pages and posts
@@ -73,24 +71,25 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
     })
   })
 
+  const getSecondLast = compose(
+    head,
+    takeLast(2)
+  )
+
+  const getThirdLast = compose(
+    head,
+    takeLast(3)
+  )
+
   const getGroup = node => {
-    const absolutePath = node.fileAbsolutePath
-    const filename = basename(absolutePath)
-    return dirname(
-      filename.indexOf(`index`) === 0
-        ? absolutePath
-            .split(`/`)
-            .slice(0, -1)
-            .join(`/`)
-        : absolutePath
-    )
-      .split(`/`)
-      .slice(-1)
-      .shift()
+    const absolutePath = node.fileAbsolutePath.split(`/`)
+    const filename = last(absolutePath)
+    return filename.indexOf(`index`) === 0
+      ? getThirdLast(absolutePath)
+      : getSecondLast(absolutePath)
   }
 
   const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
-
   groupByPage(getNodes().filter(isPage)).forEach(group =>
     group.forEach((node, index, array) =>
       createNodeField({
@@ -100,6 +99,8 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
       })
     )
   )
+
+  return true
 }
 
 exports.onCreateBabelConfig = ({ actions: { setBabelPlugin } }) => {
