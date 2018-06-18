@@ -6,30 +6,25 @@ import MainLayout from 'components/MainLayout'
 
 const renderAst = new rehypeReact({
   createElement,
-  components: {
-    // 'gaiama-image': GaimaImage,
-    // 'gaiama-link': Link,
-    // 'embed-video': GaimaVideo,
-  },
+  // components: { 'gaiama-image': GaimaImage },
 }).Compiler
 
-/* eslint-disable */
-const Page = props => (
-  <MainLayout>
-    {console.log(props)}
-    {renderAst(props.data.page.htmlAst)}
+const AboutPage = ({ data: { mainMenu, page, ...rest }, ...props }) => (
+  <MainLayout mainMenu={mainMenu} translations={page.fields.translations}>
+    {console.log(`about`, props)}
+    {renderAst(page.htmlAst)}
   </MainLayout>
 )
 
-Page.propTypes = {
+AboutPage.propTypes = {
   data: PropTypes.object.isRequired,
 }
 
-export default Page
+export default AboutPage
 
 // prettier-ignore
 export const query = graphql`
-  query AboutQuery(
+  query AboutPageQuery(
     $lang: String!
     $path: String!
   ) {
@@ -39,7 +34,7 @@ export const query = graphql`
       fields: { slug: { eq: $path } }
       frontmatter: { lang: { eq: $lang } }
     ) {
-      htmlAst
+      ...requiredMarkdownFields
     }
   }
 `

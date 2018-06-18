@@ -8,6 +8,9 @@ module.exports = {
   siteMetadata: {
     // siteUrl: config.siteUrl + pathPrefix,
   },
+  mapping: {
+    'MarkdownRemark.fields.translations': `MarkdownRemark`,
+  },
   /* Plugins */
   plugins: [
     `gatsby-plugin-react-helmet`,
