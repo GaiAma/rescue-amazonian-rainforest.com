@@ -1,5 +1,7 @@
 import React, { createElement } from 'react'
 import PropTypes from 'prop-types'
+import Img from 'gatsby-image'
+import styled, { css } from 'react-emotion'
 import rehypeReact from 'rehype-react'
 
 import MainLayout from 'components/MainLayout'
@@ -9,10 +11,47 @@ const renderAst = new rehypeReact({
   // components: { 'gaiama-image': GaimaImage },
 }).Compiler
 
-const GalleryPage = ({ data: { mainMenu, page, ...rest }, ...props }) => (
-  <MainLayout mainMenu={mainMenu} translations={page.fields.translations}>
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 300px);
+  grid-gap: 0.5rem;
+  /* display: flex;
+  flex-wrap: wrap; */
+
+  > * {
+    margin-top: 1rem;
+  }
+`
+
+const RenderGrid = ({ images }) => (
+  <Grid>
+    {images.length &&
+      images.map(({ node }) => (
+        <Img
+          fluid={node.image.fluid}
+          key={node.image.fluid.src}
+          outerWrapperClassName={css(`
+          `)}
+          css={`
+            // width: 200px;
+            img {
+              flex: ${node.image.fluid.aspectRatio};
+            }
+          `}
+        />
+      ))}
+  </Grid>
+)
+
+RenderGrid.propTypes = {
+  images: PropTypes.array.isRequired,
+}
+
+const GalleryPage = props => (
+  <MainLayout {...props}>
     {console.log(`gallery`, props)}
-    {renderAst(page.htmlAst)}
+    {renderAst(props.data.page.htmlAst)}
+    <RenderGrid images={props.data.assets.edges} />
   </MainLayout>
 )
 
@@ -29,12 +68,27 @@ export const query = graphql`
     $path: String!
   ) {
     ...mainMenu
+    ...legalMenu
 
     page: markdownRemark(
       fields: { slug: { eq: $path } }
       frontmatter: { lang: { eq: $lang } }
     ) {
       ...requiredMarkdownFields
+    }
+
+    assets: allFile(
+      filter: { relativePath: { regex: "/gallery/assets/" } }
+    ) {
+      edges {
+        node {
+          image: childImageSharp {
+            fluid(maxWidth: 400, quality: 75) {
+              ...GatsbyImageSharpFluid_withWebp
+            }
+          }
+        }
+      }
     }
   }
 `

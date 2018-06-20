@@ -9,10 +9,10 @@ const renderAst = new rehypeReact({
   // components: { 'gaiama-image': GaimaImage },
 }).Compiler
 
-const ProjectsPage = ({ data: { mainMenu, page, ...rest }, ...props }) => (
-  <MainLayout mainMenu={mainMenu} translations={page.fields.translations}>
+const ProjectsPage = props => (
+  <MainLayout {...props}>
     {console.log(`projects`, props)}
-    {renderAst(page.htmlAst)}
+    {renderAst(props.data.page.htmlAst)}
   </MainLayout>
 )
 
@@ -29,6 +29,7 @@ export const query = graphql`
     $path: String!
   ) {
     ...mainMenu
+    ...legalMenu
 
     page: markdownRemark(
       fields: { slug: { eq: $path } }

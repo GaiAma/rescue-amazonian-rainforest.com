@@ -22,7 +22,31 @@ module.exports = {
         name: `content`,
       },
     },
-    `gatsby-transformer-remark`,
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: { maxWidth: 590 },
+          },
+          {
+            resolve: `gatsby-remark-custom-blocks`,
+            options: {
+              blocks: {
+                quote: {
+                  classes: `custom-block-quote`,
+                  title: `optional`,
+                },
+                danger: `custom-block-danger`,
+                info: `custom-block-info`,
+              },
+            },
+          },
+          `remark-squeeze-paragraphs`,
+        ],
+      },
+    },
     `gatsby-transformer-yaml`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,

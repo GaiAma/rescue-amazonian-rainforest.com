@@ -1,7 +1,7 @@
 export const colors = {
   transparent: `transparent`,
 
-  black: `#222b2f`,
+  black: `#222`,
   greyDarkest: `#273238`,
   greyDarker: `#364349`,
   greyDark: `#70818a`,
@@ -10,15 +10,21 @@ export const colors = {
   greyLighter: `#f3f7f9`,
   greyLightest: `#fafcfc`,
   white: `#ffffff`,
+  white80: `rgba(255, 255, 255, 0.8)`,
   white90: `rgba(255, 255, 255, 0.9)`,
 
   greenDarkest: `#072d11`,
   greenDarker: `#0a3b17`,
   greenDark: `#0c4a1d`,
-  green: `#116728`,
+  // green: `#116728`,
+  green: `#12662a`,
   greenLight: `#168433`,
   greenLighter: `#1ba13f`,
   greenLightest: `#1fbe4a`,
+}
+
+export const fonts = {
+  accent: `Caveat, fantasy, cursive`,
 }
 
 export const textSizes = {
@@ -27,12 +33,12 @@ export const textSizes = {
   base: `1rem`, // 16px
   lg: `1.125rem`, // 18px
   xl: `1.25rem`, // 20px
-  '2xl': `1.5rem`, // 24px
-  '3xl': `1.875rem`, // 30px
-  '4xl': `2.25rem`, // 36px
-  '5xl': `3rem`, // 48px
-  '6xl': `5rem`,
-  '7xl': `8rem`,
+  xxl: `1.5rem`, // 24px
+  xxxl: `1.875rem`, // 30px
+  xxxxl: `2.25rem`, // 36px
+  xxxxxl: `3rem`, // 48px
+  xxxxxxl: `5rem`,
+  xxxxxxxxl: `8rem`,
 }
 
 export const SIZES = {

@@ -9,7 +9,7 @@ import styled from 'react-emotion'
 
 // // import SEO from '../components/SEO'
 // import { rotate, UpDown, UpDownWide, waveAnimation } from '../styles/animations'
-import { colors, media } from '../theme'
+import { colors, fonts, media, textSizes } from '../theme'
 import '../styles/global'
 
 const Background = styled.div`
@@ -48,13 +48,14 @@ const Container = styled.div`
   margin: 0 auto; */
 `
 
-const Header = styled.div`
+const Header = styled.header`
   label: header;
-  /* ${media.greaterThan(`xsmall`)} { */
-  display: flex;
-  /* } */
-  width: 580px;
+  ${media.greaterThan(`small`)} {
+    /* display: flex; */
+    width: 740px;
+  }
   margin: 0 auto;
+  position: relative;
 
   .gatsby-image-outer-wrapper {
     display: flex;
@@ -70,86 +71,162 @@ const Logo = styled(Img)`
   label: logo;
   width: 110px;
   height: 110px;
-  ${media.greaterThan(`xsmall`)} {
-    width: 165px;
-    height: 165px;
+  ${media.greaterThan(`medium`)} {
+    width: 150px;
+    height: 150px;
   }
   :before {
     content: '';
-    background: #12662a;
+    background: ${colors.green};
+    background: radial-gradient(${colors.black} 4%, ${colors.green});
     position: absolute;
     top: -0.4rem;
-    width: 100%;
+    width: 95%;
     height: 95%;
     border-radius: 0 0 50% 50%;
     left: 2.5%;
+    border: 1px solid #eefee9;
   }
 `
 
 const SiteTitle = styled.h2`
   label: site-title;
   color: ${colors.white};
-  text-shadow: 2px 2px 0px ${colors.black};
+  text-shadow: 2px 2px 0px ${colors.black}, 4px 5px 3px ${colors.black};
 
-  font-family: 'Caveat', cursive;
+  font-family: ${fonts.accent};
   text-align: center;
 
-  ${media.greaterThan(`xsmall`)} {
-    font-size: 3.5rem;
+  ${media.greaterThan(`small`)} {
+    font-size: ${textSizes.xxxxl};
+  }
+
+  ${media.greaterThan(`medium`)} {
+    font-size: ${textSizes.xxxxxl};
   }
 `
 
 const TwoColumns = styled.div`
   label: two-columns;
-  width: 890px;
-  margin: 0 auto;
-  ${media.greaterThan(`xsmall`)} {
+  margin: 2rem auto 0;
+  ${media.greaterThan(`medium`)} {
     display: flex;
+    width: 740px;
   }
 `
 
-const MainMenu = styled.div`
+const MainMenu = styled.ul`
   label: main-menu;
   list-style: none;
-  max-width: 25%;
-  margin-right: 3rem;
-  ${media.lessThan(`xsmall`)} {
-    display: flex;
-  }
-  li {
-    background: ${colors.white90};
-  }
-  li + li {
-    margin-top: 1rem;
+  /* width: 8rem; */
+  height: 100%;
+  background: ${colors.white};
+  box-shadow: 4px 5px 6px ${colors.black};
+  padding: 0;
+  display: flex;
+
+  ${media.greaterThan(`medium`)} {
+    padding: 1rem 0;
+    display: block;
+    margin-right: 3rem;
+
+    li + li {
+      margin-top: 1rem;
+    }
   }
 
   a {
-    padding: 0.3rem 1rem;
     display: block;
+    padding: 0.5rem;
     color: ${colors.black};
     text-decoration: none;
+    white-space: nowrap;
+
+    ${media.greaterThan(`medium`)} {
+      padding: 0.5rem 1rem;
+    }
 
     &:hover {
-      color: ${colors.green};
+      background: ${colors.green};
+      color: ${colors.white};
     }
   }
 `
 
 const Main = styled.div`
   label: main;
-  background: ${colors.white90};
-  padding: 0.3rem 1.2rem;
   width: 100%;
+  min-height: 60vh;
+  margin-top: 1.5rem;
+
+  ${media.greaterThan(`medium`)} {
+    margin-top: 0;
+  }
+
+  /* * + * {
+    margin-top: 1rem;
+  } */
+
+  .custom-block-quote {
+    background: ${colors.white};
+    box-shadow: 3px 3px 3px ${colors.black};
+    padding: 1.5rem;
+    .custom-block-heading {
+      font-family: ${fonts.accent};
+      font-size: ${textSizes.xxxl};
+      color: ${colors.greenDarker};
+    }
+    .custom-block-body {
+    }
+  }
+
+  .custom-block-quote + .custom-block-quote {
+    margin-top: 2rem;
+  }
 `
 
 const Footer = styled.footer`
   label: footer;
-  width: 800px;
-  margin: 0 auto;
+  margin: 2rem auto 0;
+  padding: 1rem;
+  color: ${colors.white};
+  text-align: center;
+  ${media.greaterThan(`medium`)} {
+    width: 800px;
+  }
+
+  a {
+    color: ${colors.white};
+  }
 `
 
-const LanguageMenu = styled.div`
+const LanguageMenu = styled.ul`
   label: language-menu;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  list-style: none;
+
+  li {
+    padding: 0.3rem 0.5rem;
+  }
+  a {
+    color: ${colors.white};
+  }
+`
+
+const LegalMenu = styled.ul`
+  label: legal-menu;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  font-size: ${textSizes.sm};
+  li {
+    margin: 0 0.5rem;
+  }
+
   a {
     color: ${colors.white};
   }
@@ -162,27 +239,46 @@ const getLangTitleById = (langs, id) => {
 
 class Wrapper extends React.Component {
   getMainMenu() {
-    if (!this.props.mainMenu.length) return null
-    return this.props.mainMenu.map(({ node: m }) => (
-      <li key={m.fields.slug}>
-        <Link to={m.fields.slug}>{m.frontmatter.title}</Link>
-      </li>
-    ))
+    const mainMenu = this.props.data.mainMenu.edges
+    if (!mainMenu.length) return null
+    return (
+      <MainMenu>
+        {mainMenu.map(({ node: m }) => (
+          <li key={m.fields.slug}>
+            <Link to={m.fields.slug}>{m.frontmatter.title}</Link>
+          </li>
+        ))}
+      </MainMenu>
+    )
   }
 
   getLanguageMenu() {
-    const { translations } = this.props
+    const { translations } = this.props.data.page.fields
     if (!translations.length) return null
     return (
-      <ul>
-        {translations.map(x => (
-          <li key={x.fields.slug}>
-            <Link to={x.fields.slug}>
-              {getLangTitleById(this.props.languages, x.frontmatter.lang)}
+      <LanguageMenu>
+        {translations.map(m => (
+          <li key={m.fields.slug}>
+            <Link to={m.fields.slug}>
+              {getLangTitleById(this.props.languages, m.frontmatter.lang)}
             </Link>
           </li>
         ))}
-      </ul>
+      </LanguageMenu>
+    )
+  }
+
+  getLegalMenu() {
+    const legalMenu = this.props.data.legalMenu.edges
+    if (!legalMenu.length) return null
+    return (
+      <LegalMenu>
+        {legalMenu.map(({ node: m }) => (
+          <li key={m.fields.slug}>
+            <Link to={m.fields.slug}>{m.frontmatter.title}</Link>
+          </li>
+        ))}
+      </LegalMenu>
     )
   }
 
@@ -202,16 +298,15 @@ class Wrapper extends React.Component {
           <Header>
             <Logo fluid={logo.image.fluid} />
             <SiteTitle>Rescue Amazonian Rainforest</SiteTitle>
+            {this.getLanguageMenu()}
           </Header>
 
           <TwoColumns>
-            <MainMenu>{this.getMainMenu()}</MainMenu>
+            {this.getMainMenu()}
             <Main>{children}</Main>
           </TwoColumns>
 
-          <Footer>
-            <LanguageMenu>{this.getLanguageMenu()}</LanguageMenu>
-          </Footer>
+          <Footer>{this.getLegalMenu()}</Footer>
         </Container>
 
         <Background>
@@ -222,21 +317,20 @@ class Wrapper extends React.Component {
   }
 }
 Wrapper.propTypes = {
-  languages: PropTypes.array.isRequired,
-  mainMenu: PropTypes.array.isRequired,
   bg: PropTypes.shape({
     image: PropTypes.object.isRequired,
   }).isRequired,
   logo: PropTypes.shape({
     image: PropTypes.object.isRequired,
   }).isRequired,
-  translations: PropTypes.array.isRequired,
+  languages: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
 }
 
-const MainLayout = ({ mainMenu, translations, children }) => (
+const MainLayout = ({ children, ...props }) => (
   <StaticQuery
     query={graphql`
-      query IndexQuery {
+      query MainLayoutQuery {
         languages: allLanguagesYaml {
           edges {
             node {
@@ -269,13 +363,7 @@ const MainLayout = ({ mainMenu, translations, children }) => (
       }
     `}
     render={({ languages, bg, logo }) => (
-      <Wrapper
-        languages={languages.edges}
-        mainMenu={mainMenu.edges}
-        bg={bg}
-        logo={logo}
-        translations={translations}
-      >
+      <Wrapper bg={bg} logo={logo} languages={languages.edges} {...props}>
         {children}
       </Wrapper>
     )}
@@ -283,9 +371,10 @@ const MainLayout = ({ mainMenu, translations, children }) => (
 )
 
 MainLayout.propTypes = {
-  translations: PropTypes.array.isRequired,
-  mainMenu: PropTypes.shape({
-    edges: PropTypes.array,
+  data: PropTypes.shape({
+    mainMenu: PropTypes.object,
+    page: PropTypes.object,
+    legalMenu: PropTypes.object,
   }),
 }
 
@@ -294,7 +383,31 @@ export default MainLayout
 export const Fragments = graphql`
   fragment mainMenu on RootQueryType {
     mainMenu: allMarkdownRemark(
-      filter: { frontmatter: { menu: { eq: "main" }, lang: { eq: "en" } } }
+      filter: {
+        fields: { isPage: { eq: true } }
+        frontmatter: { menu: { eq: "main" }, lang: { eq: $lang } }
+      }
+      sort: { fields: [frontmatter___order] }
+    ) {
+      edges {
+        node {
+          fields {
+            slug
+          }
+          frontmatter {
+            title
+          }
+        }
+      }
+    }
+  }
+
+  fragment legalMenu on RootQueryType {
+    legalMenu: allMarkdownRemark(
+      filter: {
+        fields: { isPage: { eq: true } }
+        frontmatter: { menu: { eq: "legal" }, lang: { eq: $lang } }
+      }
     ) {
       edges {
         node {

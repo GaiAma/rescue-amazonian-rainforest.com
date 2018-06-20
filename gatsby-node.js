@@ -3,13 +3,31 @@ const slugify = require(`slugify`)
 const { compose, groupWith, last, takeLast, head } = require(`ramda`)
 
 const isPage = node =>
-  node.internal.type === `MarkdownRemark` &&
-  node.fileAbsolutePath.includes(`/content/pages`) &&
-  node.frontmatter.slug !== undefined
+  /\/content\/pages\/[^_]+\/index\.[^/]+/.test(node.fileAbsolutePath)
+
+const getNLast = n =>
+  compose(
+    head,
+    takeLast(n)
+  )
+
+const getGroup = node => {
+  const absolutePath = node.fileAbsolutePath.split(`/`)
+  const filename = last(absolutePath)
+  return filename.indexOf(`index`) === 0
+    ? getNLast(3)(absolutePath)
+    : getNLast(2)(absolutePath)
+}
+
+const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
 
 exports.onCreateNode = ({ node, actions }) => {
   const { createNodeField } = actions
-  // console.log(node)
+  createNodeField({
+    node,
+    name: `isPage`,
+    value: isPage(node),
+  })
   if (isPage(node)) {
     createNodeField({
       node,
@@ -35,10 +53,7 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
       }
 
       pages: allMarkdownRemark(
-        filter: {
-          fileAbsolutePath: { regex: "/content/pages/" }
-          frontmatter: { slug: { ne: null } }
-        }
+        filter: { fields: { isPage: { eq: true }, slug: { ne: null } } }
       ) {
         edges {
           node {
@@ -71,26 +86,9 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
     })
   })
 
-  const getSecondLast = compose(
-    head,
-    takeLast(2)
-  )
+  const pages = getNodes().filter(isPage)
 
-  const getThirdLast = compose(
-    head,
-    takeLast(3)
-  )
-
-  const getGroup = node => {
-    const absolutePath = node.fileAbsolutePath.split(`/`)
-    const filename = last(absolutePath)
-    return filename.indexOf(`index`) === 0
-      ? getThirdLast(absolutePath)
-      : getSecondLast(absolutePath)
-  }
-
-  const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
-  groupByPage(getNodes().filter(isPage)).forEach(group =>
+  groupByPage(pages).forEach(group =>
     group.forEach((node, index, array) =>
       createNodeField({
         node,

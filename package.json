@@ -51,12 +51,15 @@
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.8.2",
     "gatsby-plugin-sharp": "next",
+    "gatsby-remark-custom-blocks": "^2.0.0-beta.1",
+    "gatsby-remark-images": "next",
     "gatsby-source-filesystem": "next",
     "gatsby-transformer-remark": "next",
     "gatsby-transformer-sharp": "next",
     "gatsby-transformer-yaml": "next",
     "lodash": "^4.17.10",
     "prettier": "^1.13.3",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "remark-squeeze-paragraphs": "^3.0.1"
   }
 }
