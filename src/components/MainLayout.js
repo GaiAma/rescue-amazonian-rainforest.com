@@ -110,28 +110,36 @@ const TwoColumns = styled.div`
   label: two-columns;
   margin: 2rem auto 0;
   ${media.greaterThan(`medium`)} {
-    display: flex;
+    /* display: flex; */
     width: 740px;
   }
 `
 
-const MainMenu = styled.ul`
+const MainMenu = styled.div`
   label: main-menu;
-  list-style: none;
-  /* width: 8rem; */
-  height: 100%;
   background: ${colors.white};
   box-shadow: 4px 5px 6px ${colors.black};
-  padding: 0;
-  display: flex;
+  div {
+    overflow: hidden;
+    height: 2.1rem;
+  }
+  ul {
+    list-style: none;
+    /* width: 8rem; */
+    overflow-x: scroll;
+    height: 200%;
+    padding: 0;
+    display: flex;
 
-  ${media.greaterThan(`medium`)} {
-    padding: 1rem 0;
-    display: block;
-    margin-right: 3rem;
+    ${media.greaterThan(`medium`)} {
+      justify-content: center;
+      /* padding: 1rem 0; */
+      /* display: block; */
+      /* margin-right: 3rem; */
 
-    li + li {
+      /* li + li {
       margin-top: 1rem;
+    } */
     }
   }
 
@@ -159,13 +167,13 @@ const Main = styled.div`
   min-height: 60vh;
   margin-top: 1.5rem;
 
-  ${media.greaterThan(`medium`)} {
+  /* ${media.greaterThan(`medium`)} {
     margin-top: 0;
-  }
-
-  /* * + * {
-    margin-top: 1rem;
   } */
+
+  > * + * {
+    margin-top: 1.5rem;
+  }
 
   .custom-block-quote {
     background: ${colors.white};
@@ -187,7 +195,7 @@ const Main = styled.div`
 
 const Footer = styled.footer`
   label: footer;
-  margin: 2rem auto 0;
+  margin: 1rem auto 0;
   padding: 1rem;
   color: ${colors.white};
   text-align: center;
@@ -243,11 +251,15 @@ class Wrapper extends React.Component {
     if (!mainMenu.length) return null
     return (
       <MainMenu>
-        {mainMenu.map(({ node: m }) => (
-          <li key={m.fields.slug}>
-            <Link to={m.fields.slug}>{m.frontmatter.title}</Link>
-          </li>
-        ))}
+        <div>
+          <ul>
+            {mainMenu.map(({ node: m }) => (
+              <li key={m.fields.slug}>
+                <Link to={m.fields.slug}>{m.frontmatter.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </MainMenu>
     )
   }
