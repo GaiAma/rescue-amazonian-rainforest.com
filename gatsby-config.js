@@ -30,20 +30,23 @@ module.exports = {
             resolve: `gatsby-remark-images`,
             options: { maxWidth: 590 },
           },
-          {
-            resolve: `gatsby-remark-custom-blocks`,
-            options: {
-              blocks: {
-                quote: {
-                  classes: `custom-block-quote`,
-                  title: `optional`,
-                },
-                danger: `custom-block-danger`,
-                info: `custom-block-info`,
-              },
-            },
-          },
+          `gatsby-remark-copy-linked-files`,
+          // {
+          //   resolve: `gatsby-remark-custom-blocks`,
+          //   options: {
+          //     blocks: {
+          //       quote: {
+          //         classes: `custom-block-quote`,
+          //         title: `optional`,
+          //       },
+          //       danger: `custom-block-danger`,
+          //       info: `custom-block-info`,
+          //     },
+          //   },
+          // },
           `remark-squeeze-paragraphs`,
+          // removes the paragraph parent of custom components
+          `gatsby-remark-component`,
         ],
       },
     },

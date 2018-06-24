@@ -1,31 +1,67 @@
 import React, { createElement } from 'react'
 import PropTypes from 'prop-types'
+import { graphql } from 'gatsby'
 import Img from 'gatsby-image'
 import rehypeReact from 'rehype-react'
 import styled from 'react-emotion'
 import MainLayout from 'components/MainLayout'
-import { colors } from '../theme'
+import PayPal from 'components/PayPal'
+import { fonts } from '../theme'
 
 const renderAst = new rehypeReact({
   createElement,
-  // components: { 'gaiama-image': GaimaImage },
+  components: {
+    'pay-pal': PayPal,
+  },
 }).Compiler
 
 const Card = styled.div`
-  background: ${colors.white};
-  padding: 1rem;
+  label: card;
+  /* padding: 3rem; */
+
+  .gatsby-image-outer-wrapper {
+    float: right;
+    margin: 2.5rem 0 0 1rem;
+  }
+
+  & + & {
+    margin-top: 3rem;
+
+    .gatsby-image-outer-wrapper {
+      float: left;
+      margin: 2.5rem 2rem 1rem 0;
+    }
+  }
+`
+
+const CardTitle = styled.h4`
+  label: card-title;
+  /* font-family: ${fonts.accent}; */
+  font-size: 1.15rem;
+  text-align: center;
+`
+
+const CardImage = styled(Img)``
+
+const CardContent = styled.div`
+  label: card-content;
+  margin-top: ${({ hasTitle }) => hasTitle && `2rem`};
 `
 
 const RenderPartials = ({ partials }) =>
   partials.map(({ partial }, i) => (
     <Card key={i}>
-      <h4>{partial.frontmatter.title}</h4>
-      {partial.frontmatter.image && (
-        <div>
-          <Img fixed={partial.frontmatter.image.image.fixed} />
-        </div>
+      {partial.frontmatter.title && (
+        <CardTitle>{partial.frontmatter.title}</CardTitle>
       )}
-      {renderAst(partial.htmlAst)}
+
+      {partial.frontmatter.image && (
+        <CardImage fixed={partial.frontmatter.image.image.fixed} />
+      )}
+
+      <CardContent hasTitle={!!partial.frontmatter.title}>
+        {renderAst(partial.htmlAst)}
+      </CardContent>
     </Card>
   ))
 
@@ -46,7 +82,6 @@ RenderContentOrPartials.propTypes = {
 
 const Page = props => (
   <MainLayout {...props}>
-    {console.log(`page`, props)}
     <RenderContentOrPartials page={props.data.page} />
   </MainLayout>
 )
@@ -78,7 +113,7 @@ export const query = graphql`
               title
               image {
                 image: childImageSharp {
-                  fixed(width: 100, quality: 75) {
+                  fixed(width: 200, quality: 75) {
                     ...GatsbyImageSharpFixed_withWebp
                   }
                 }

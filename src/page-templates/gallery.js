@@ -1,47 +1,75 @@
-import React, { createElement } from 'react'
+import React, { Component, createElement } from 'react'
 import PropTypes from 'prop-types'
+import { graphql } from 'gatsby'
 import Img from 'gatsby-image'
-import styled, { css } from 'react-emotion'
+import styled from 'react-emotion'
 import rehypeReact from 'rehype-react'
 
 import MainLayout from 'components/MainLayout'
 
 const renderAst = new rehypeReact({
-  createElement,
-  // components: { 'gaiama-image': GaimaImage },
+  createElement, // components: { 'gaiama-image': GaimaImage },
 }).Compiler
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 300px);
-  grid-gap: 0.5rem;
-  /* display: flex;
-  flex-wrap: wrap; */
+  grid-template-columns: repeat(2, 48.7%);
+  grid-gap: 1rem;
+  align-items: center;
 
   > * {
     margin-top: 1rem;
   }
 `
 
-const RenderGrid = ({ images }) => (
-  <Grid>
-    {images.length &&
-      images.map(({ node }) => (
-        <Img
-          fluid={node.image.fluid}
-          key={node.image.fluid.src}
-          outerWrapperClassName={css(`
-          `)}
-          css={`
-            // width: 200px;
-            img {
-              flex: ${node.image.fluid.aspectRatio};
-            }
-          `}
-        />
-      ))}
-  </Grid>
-)
+const GridItem = styled.div`
+  order: ${props =>
+    props.isSelected && props.index % 2 === 1 ? props.index - 2 : props.index};
+  ${props =>
+    props.aspectRatio < 0.7 &&
+    `
+      grid-row: span 2;
+      align-self: center;
+    `};
+  ${props =>
+    props.isSelected &&
+    `
+      grid-row: span 2;
+      grid-column: span 2;
+    `};
+`
+
+class RenderGrid extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      index: null,
+    }
+  }
+
+  selectItem = index => () => {
+    this.setState({ index: this.state.index === index ? null : index })
+  }
+
+  render() {
+    return (
+      <Grid>
+        {this.props.images.length &&
+          this.props.images.map(({ node }, index) => (
+            <GridItem
+              key={node.image.fluid.src}
+              aspectRatio={node.image.fluid.aspectRatio}
+              onClick={this.selectItem(index)}
+              isSelected={this.state.index === index}
+              index={index}
+            >
+              <Img fluid={node.image.fluid} />
+            </GridItem>
+          ))}
+      </Grid>
+    )
+  }
+}
 
 RenderGrid.propTypes = {
   images: PropTypes.array.isRequired,
@@ -49,7 +77,6 @@ RenderGrid.propTypes = {
 
 const GalleryPage = props => (
   <MainLayout {...props}>
-    {console.log(`gallery`, props)}
     {renderAst(props.data.page.htmlAst)}
     <RenderGrid images={props.data.assets.edges} />
   </MainLayout>
@@ -79,11 +106,16 @@ export const query = graphql`
 
     assets: allFile(
       filter: { relativePath: { regex: "/gallery/assets/" } }
+      sort: { fields: [birthTime], order: DESC }
     ) {
       edges {
         node {
           image: childImageSharp {
-            fluid(maxWidth: 400, quality: 75) {
+            original {
+              width
+              height
+            }
+            fluid(maxWidth: 800, quality: 75) {
               ...GatsbyImageSharpFluid_withWebp
             }
           }

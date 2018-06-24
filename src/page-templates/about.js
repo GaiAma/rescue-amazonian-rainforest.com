@@ -1,5 +1,6 @@
 import React, { createElement } from 'react'
 import PropTypes from 'prop-types'
+import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
 
 import MainLayout from 'components/MainLayout'
@@ -10,10 +11,7 @@ const renderAst = new rehypeReact({
 }).Compiler
 
 const AboutPage = props => (
-  <MainLayout {...props}>
-    {console.log(`about`, props)}
-    {renderAst(props.data.page.htmlAst)}
-  </MainLayout>
+  <MainLayout {...props}>{renderAst(props.data.page.htmlAst)}</MainLayout>
 )
 
 AboutPage.propTypes = {

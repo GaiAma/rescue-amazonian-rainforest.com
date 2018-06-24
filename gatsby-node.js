@@ -87,7 +87,7 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
   })
 
   const pages = getNodes().filter(isPage)
-
+  console.log(groupByPage(pages))
   groupByPage(pages).forEach(group =>
     group.forEach((node, index, array) =>
       createNodeField({
