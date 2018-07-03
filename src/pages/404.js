@@ -1,6 +1,6 @@
 import React from 'react'
-import MainLayout from '../components/MainLayout'
+// import MainLayout from '../components/MainLayout'
 
-const PageNotFound = props => <MainLayout>404</MainLayout>
+const PageNotFound = props => <div>404</div>
 
 export default PageNotFound

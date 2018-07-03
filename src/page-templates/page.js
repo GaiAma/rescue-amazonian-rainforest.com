@@ -98,8 +98,7 @@ export const query = graphql`
     $lang: String!
     $path: String!
   ) {
-    ...mainMenu
-    ...legalMenu
+    ...MainLayoutDependencies
 
     page: markdownRemark(
       fields: { slug: { eq: $path } }

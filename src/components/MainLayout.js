@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
-import { StaticQuery } from 'gatsby'
+import { graphql } from 'gatsby'
 import Link from 'gatsby-link'
 import Img from 'gatsby-image'
 import styled from 'react-emotion'
@@ -295,7 +295,10 @@ class Wrapper extends React.Component {
         {translations.map(m => (
           <li key={m.fields.slug}>
             <Link to={m.fields.slug}>
-              {getLangTitleById(this.props.languages, m.frontmatter.lang)}
+              {getLangTitleById(
+                this.props.data.languages.edges,
+                m.frontmatter.lang
+              )}
             </Link>
           </li>
         ))}
@@ -318,7 +321,11 @@ class Wrapper extends React.Component {
   }
 
   render() {
-    const { bg, logo, children } = this.props
+    const {
+      data: { bg, logo },
+      children,
+    } = this.props
+
     return (
       <React.Fragment>
         {/* <SEO /> */}
@@ -361,57 +368,56 @@ class Wrapper extends React.Component {
   }
 }
 Wrapper.propTypes = {
-  bg: PropTypes.shape({
-    image: PropTypes.object.isRequired,
-  }).isRequired,
-  logo: PropTypes.shape({
-    image: PropTypes.object.isRequired,
-  }).isRequired,
-  languages: PropTypes.array.isRequired,
+  // bg: PropTypes.shape({
+  //   image: PropTypes.object.isRequired,
+  // }).isRequired,
+  // logo: PropTypes.shape({
+  //   image: PropTypes.object.isRequired,
+  // }).isRequired,
+  // languages: PropTypes.array.isRequired,
   data: PropTypes.object.isRequired,
 }
 
 const MainLayout = ({ children, ...props }) => (
-  <StaticQuery
-    query={graphql`
-      query MainLayoutQuery {
-        languages: allLanguagesYaml {
-          edges {
-            node {
-              id
-              title
-              iso
-            }
-          }
-        }
+  // <StaticQuery
+  //   query={graphql`
+  //     query MainLayoutQuery {
+  //       languages: allLanguagesYaml {
+  //         edges {
+  //           node {
+  //             id
+  //             title
+  //             iso
+  //           }
+  //         }
+  //       }
 
-        bg: file(
-          relativePath: {
-            regex: "/35426598_2134176226801833_1481922592255246336_n.jpg/"
-          }
-        ) {
-          image: childImageSharp {
-            fluid(maxWidth: 2048, quality: 75) {
-              ...GatsbyImageSharpFluid_withWebp
-            }
-          }
-        }
+  //       bg: file(
+  //         relativePath: {
+  //           regex: "/35426598_2134176226801833_1481922592255246336_n.jpg/"
+  //         }
+  //       ) {
+  //         image: childImageSharp {
+  //           fluid(maxWidth: 2048, quality: 75) {
+  //             ...GatsbyImageSharpFluid_withWebp
+  //           }
+  //         }
+  //       }
 
-        logo: file(relativePath: { regex: "/RAR_LOGO.*.png/" }) {
-          image: childImageSharp {
-            fluid(maxWidth: 201, quality: 75) {
-              ...GatsbyImageSharpFluid_withWebp_tracedSVG
-            }
-          }
-        }
-      }
-    `}
-    render={({ languages, bg, logo }) => (
-      <Wrapper bg={bg} logo={logo} languages={languages.edges} {...props}>
-        {children}
-      </Wrapper>
-    )}
-  />
+  //       logo: file(relativePath: { regex: "/RAR_LOGO.*.png/" }) {
+  //         image: childImageSharp {
+  //           fluid(maxWidth: 201, quality: 75) {
+  //             ...GatsbyImageSharpFluid_withWebp_tracedSVG
+  //           }
+  //         }
+  //       }
+  //     }
+  //   `}
+  //   render={({ languages, bg, logo }) => (
+  // <Wrapper bg={bg} logo={logo} languages={languages.edges} {...props}>
+  <Wrapper {...props}>{children}</Wrapper>
+  //   )}
+  // />
 )
 
 MainLayout.propTypes = {
@@ -425,7 +431,37 @@ MainLayout.propTypes = {
 export default MainLayout
 
 export const Fragments = graphql`
-  fragment mainMenu on RootQueryType {
+  fragment MainLayoutDependencies on RootQueryType {
+    languages: allLanguagesYaml {
+      edges {
+        node {
+          id
+          title
+          iso
+        }
+      }
+    }
+
+    bg: file(
+      relativePath: {
+        regex: "/35426598_2134176226801833_1481922592255246336_n.jpg/"
+      }
+    ) {
+      image: childImageSharp {
+        fluid(maxWidth: 2048, quality: 75) {
+          ...GatsbyImageSharpFluid_withWebp
+        }
+      }
+    }
+
+    logo: file(relativePath: { regex: "/RAR_LOGO.*.png/" }) {
+      image: childImageSharp {
+        fluid(maxWidth: 201, quality: 75) {
+          ...GatsbyImageSharpFluid_withWebp_tracedSVG
+        }
+      }
+    }
+
     mainMenu: allMarkdownRemark(
       filter: {
         fields: { isPage: { eq: true } }
@@ -444,9 +480,7 @@ export const Fragments = graphql`
         }
       }
     }
-  }
 
-  fragment legalMenu on RootQueryType {
     legalMenu: allMarkdownRemark(
       filter: {
         fields: { isPage: { eq: true } }
