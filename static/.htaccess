@@ -1,0 +1,69 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_URI} ^/?$ [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/(HOME|Philosophie).html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/(HOME|Philosophie)_GB.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/en/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/(HOME|Philosophie)_ES.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/es/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/(Projekte|Kontakt).html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/projekte/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/(Projekte|Kontakt)_GB.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/en/projects/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/(Projekte|Kontakt)_ES.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/es/proyectos/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Galerie.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/gallerie/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Galerie_GB.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/en/gallery/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Galerie_ES.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/es/galeria/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Initiatoren.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/ueber-uns/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Initiatoren_GB.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/en/about-us/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Initiatoren_ES.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/es/sobre-nosotros/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Datenschutz.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/datenschutz/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Datenschutz_GB.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/en/privacy/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Datenschutz_ES.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/es/proteccion-de-datos/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Impressum.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/de/impressum/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Impressum_GB.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/en/legal/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/Impressum_ES.html.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/es/legal/ [QSA,L,R=301]
+
+  RewriteCond %{REQUEST_URI} ^/Rescue_Amazonian_Rainforest/HOME_files/WAZ_vom_21_11_2011.pdf.* [NC]
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/static/WAZ_vom_21_11_2011-9cc97312e370cd36f7b954d55289c362.pdf [QSA,L,R=301]
+
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  #RewriteCond %{REQUEST_FILENAME} !-f
+  #RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule .* https://www.rescue-amazonian-rainforest.com/$1 [QSA,L,R=301]
+</IfModule>

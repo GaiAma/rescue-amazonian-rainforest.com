@@ -6,7 +6,7 @@ import rehypeReact from 'rehype-react'
 import styled from 'react-emotion'
 import MainLayout from 'components/MainLayout'
 import PayPal from 'components/PayPal'
-import { fonts } from '../theme'
+import { fonts, media } from '../theme'
 
 const renderAst = new rehypeReact({
   createElement,
@@ -20,16 +20,24 @@ const Card = styled.div`
   /* padding: 3rem; */
 
   .gatsby-image-outer-wrapper {
-    float: right;
-    margin: 2.5rem 0 0 1rem;
+    text-align: center;
+    margin-top: 2rem;
+    ${media.greaterThan(`small`)} {
+      float: right;
+      margin: 2.5rem 0 0 1rem;
+    }
   }
 
   & + & {
     margin-top: 3rem;
 
     .gatsby-image-outer-wrapper {
-      float: left;
-      margin: 2.5rem 2rem 1rem 0;
+      text-align: center;
+      margin-top: 2rem;
+      ${media.greaterThan(`small`)} {
+        float: left;
+        margin: 2.5rem 2rem 1rem 0;
+      }
     }
   }
 `
@@ -46,6 +54,17 @@ const CardImage = styled(Img)``
 const CardContent = styled.div`
   label: card-content;
   margin-top: ${({ hasTitle }) => hasTitle && `2rem`};
+`
+
+const EyeCatcher = styled.div`
+  label: eyecatcher;
+  text-align: center;
+  margin-top: 4rem;
+  ${media.greaterThan(`large`)} {
+    position: fixed;
+    right: 0.5rem;
+    bottom: 0.5rem;
+  }
 `
 
 const RenderPartials = ({ partials }) =>
@@ -83,6 +102,20 @@ RenderContentOrPartials.propTypes = {
 const Page = props => (
   <MainLayout {...props}>
     <RenderContentOrPartials page={props.data.page} />
+
+    {props.data.page.frontmatter.eyecatcher && (
+      <EyeCatcher>
+        <a
+          href={props.data.page.frontmatter.eyecatcher.file.publicURL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Img
+            fixed={props.data.page.frontmatter.eyecatcher.image.image.fixed}
+          />
+        </a>
+      </EyeCatcher>
+    )}
   </MainLayout>
 )
 
@@ -106,6 +139,19 @@ export const query = graphql`
     ) {
       ...requiredMarkdownFields
       frontmatter {
+        title
+        eyecatcher {
+          image {
+            image: childImageSharp {
+              fixed(width: 190, quality: 75) {
+                ...GatsbyImageSharpFixed
+              }
+            }
+          }
+          file {
+            publicURL
+          }
+        }
         partials {
           partial: childMarkdownRemark {
             frontmatter {

@@ -45,6 +45,6 @@ injectGlobal`
 
   a {
     text-decoration: none;
-    color: ${colors.black}
+    color: ${colors.green}
   }
 `

@@ -1,13 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
 import Link from 'gatsby-link'
 import Img from 'gatsby-image'
 import styled from 'react-emotion'
+import SEO from '../components/SEO'
 // import {  } from 'react-spring'
-
-// // import SEO from '../components/SEO'
 // import { rotate, UpDown, UpDownWide, waveAnimation } from '../styles/animations'
 import { colors, fonts, media, textSizes } from '../theme'
 import SVG from './SVG.jsx'
@@ -68,8 +66,10 @@ const Header = styled.header`
   }
 `
 
-const Logo = styled(Img)`
+const Logo = styled.div`
   label: logo;
+  position: relative;
+  margin: 0 auto;
   width: 110px;
   height: 110px;
   ${media.greaterThan(`medium`)} {
@@ -87,6 +87,9 @@ const Logo = styled(Img)`
     border-radius: 0 0 50% 50%;
     left: 2.5%;
     border: 1px solid #eefee9;
+  }
+  img {
+    position: relative;
   }
 `
 
@@ -118,6 +121,9 @@ const MainMenu = styled.div`
   overflow: hidden;
   height: 2.3rem;
   /* box-shadow: 4px 5px 6px ${colors.black}; */
+  ${media.greaterThan(`small`)} {
+    background: linear-gradient(90deg, transparent, #fff, #fff, #fff, transparent);
+  }
   ${media.greaterThan(`medium`)} {
     width: 1050px;
     background: linear-gradient(90deg, transparent, #fff, transparent);
@@ -130,8 +136,11 @@ const MainMenu = styled.div`
     padding: 0;
     display: flex;
     justify-content: space-around;
-    width: 490px;
     margin: 0 auto;
+    /* width: 360px; */
+    ${media.greaterThan(`small`)} {
+      width: 490px;
+    }
   }
 
   li {
@@ -141,7 +150,7 @@ const MainMenu = styled.div`
   a {
     display: block;
     height: 2.3rem;
-    padding: .45rem 0.5rem;
+    padding: 0.55rem 0.5rem;
     color: ${colors.black};
     text-decoration: none;
     white-space: nowrap;
@@ -163,10 +172,11 @@ const Main = styled.div`
   width: 100%;
   min-height: 60vh;
   margin: 1.5rem auto 0;
-  padding: 3rem;
+  padding: 0.5rem;
   background: ${colors.white};
 
   ${media.greaterThan(`medium`)} {
+    padding: 3rem;
     width: 740px;
   }
 
@@ -215,9 +225,19 @@ const LanguageMenu = styled.ul`
   list-style: none;
   padding: 0;
 
-  li {
-    margin: 0.3rem 0.5rem;
+  ${media.lessThan(`medium`)} {
+    flex-direction: column;
+    text-align: right;
   }
+
+  li {
+    margin: 0.3rem 0.1rem;
+
+    ${media.greaterThan(`medium`)} {
+      margin: 0.3rem 0.5rem;
+    }
+  }
+
   a {
     background: #fff;
     padding: 0.4rem;
@@ -229,10 +249,17 @@ const LanguageMenu = styled.ul`
 const MetaMenu = styled.div`
   label: meta-menu;
   position: absolute;
-  top: 0.5rem;
-  right: 1rem;
   display: flex;
   align-items: center;
+  top: 0;
+  right: 0;
+  ${media.lessThan(`medium`)} {
+    flex-direction: column-reverse;
+  }
+  ${media.greaterThan(`medium`)} {
+    top: 0.5rem;
+    right: 1rem;
+  }
 `
 
 const LegalMenu = styled.ul`
@@ -322,27 +349,28 @@ class Wrapper extends React.Component {
 
   render() {
     const {
-      data: { bg, logo },
+      data: { bg, logo, logoSvg, site, page },
       children,
     } = this.props
 
     return (
       <React.Fragment>
-        {/* <SEO /> */}
-        <Helmet>
-          {/* <link
-            href="https://fonts.googleapis.com/css?family=Caveat:400,700"
-            rel="stylesheet"
-          /> */}
-          {/* <link
-            href="https://fonts.googleapis.com/css?family=Chathura|Didact+Gothic|Harmattan|Julius+Sans+One|Lekton|Montserrat|Quicksand|Tenor+Sans"
-            rel="stylesheet"
-          /> */}
-        </Helmet>
+        <SEO
+          siteUrl={site.siteMetadata.siteUrl}
+          pageTitle={page.frontmatter.title}
+          siteTitle={site.siteMetadata.title}
+          siteTitleAlt={site.siteMetadata.titleAlt}
+          description={``}
+          image={logo.image.fluid.src}
+          language={page.fields.language}
+        />
 
         <Container>
           <Header>
-            <Logo fluid={logo.image.fluid} />
+            {/* <Logo fluid={logo.image.fluid} /> */}
+            <Logo>
+              <img src={logoSvg.publicURL} />
+            </Logo>
             <SiteTitle>Rescue Amazonian Rainforest</SiteTitle>
             <MetaMenu>
               <FB href="https://www.facebook.com/RescueAmazonianRainforestGug">
@@ -432,6 +460,14 @@ export default MainLayout
 
 export const Fragments = graphql`
   fragment MainLayoutDependencies on RootQueryType {
+    site {
+      siteMetadata {
+        title
+        titleAlt
+        siteUrl
+      }
+    }
+
     languages: allLanguagesYaml {
       edges {
         node {
@@ -454,10 +490,14 @@ export const Fragments = graphql`
       }
     }
 
-    logo: file(relativePath: { regex: "/RAR_LOGO.*.png/" }) {
+    logoSvg: file(relativePath: { regex: "/logo.svg/" }) {
+      publicURL
+    }
+
+    logo: file(relativePath: { regex: "/logo.png/" }) {
       image: childImageSharp {
         fluid(maxWidth: 201, quality: 75) {
-          ...GatsbyImageSharpFluid_withWebp_tracedSVG
+          ...GatsbyImageSharpFluid
         }
       }
     }
@@ -503,6 +543,10 @@ export const Fragments = graphql`
   fragment requiredMarkdownFields on MarkdownRemark {
     htmlAst
     fields {
+      language {
+        iso
+        currency
+      }
       translations {
         frontmatter {
           lang

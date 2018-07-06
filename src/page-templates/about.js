@@ -33,6 +33,9 @@ export const query = graphql`
       frontmatter: { lang: { eq: $lang } }
     ) {
       ...requiredMarkdownFields
+      frontmatter {
+        title
+      }
     }
   }
 `

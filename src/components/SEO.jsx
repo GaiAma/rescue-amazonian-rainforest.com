@@ -1,79 +1,85 @@
-// import React from 'react'
-// import Helmet from 'react-helmet'
-// import config from '../../config/website'
+import React from 'react'
+import PropTypes from 'prop-types'
+import Helmet from 'react-helmet'
+import { colors } from '../theme'
 
-// const SEO = () => {
-//   const title = config.siteTitle
-//   const description = config.siteDescription
-//   const realPrefix = config.pathPrefix === `/` ? `` : config.pathPrefix
-//   const image = config.siteUrl + realPrefix + config.siteLogo
-//   const blogURL = config.siteUrl + config.pathPrefix
-//   const schemaOrgJSONLD = [
-//     {
-//       '@context': `http://schema.org`,
-//       '@type': `WebSite`,
-//       url: blogURL,
-//       name: title,
-//       alternateName: config.siteTitleAlt ? config.siteTitleAlt : ``,
-//     },
-//   ]
-//   return (
-//     <Helmet>
-//       <link
-//         href="https://fonts.googleapis.com/css?family=Caveat:400,700|Dawning+of+a+New+Day|Just+Another+Hand|Kavivanar"
-//         rel="stylesheet"
-//       />
+const SEO = ({
+  siteUrl,
+  pageTitle,
+  siteTitle,
+  siteTitleAlt,
+  description,
+  image,
+  language,
+}) => {
+  const imageUrl = siteUrl + image
+  const title =
+    pageTitle === siteTitle ? pageTitle : `${pageTitle} - ${siteTitle}`
 
-//       <html lang={config.siteLanguage} />
-//       <title>{title}</title>
-//       <meta charSet="utf-8" />
-//       <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-//       <meta name="viewport" content="width=device-width, initial-scale=1" />
-//       <link
-//         rel="apple-touch-icon"
-//         sizes="180x180"
-//         href="/favicons/apple-touch-icon.png"
-//       />
-//       <link
-//         rel="icon"
-//         type="image/png"
-//         sizes="32x32"
-//         href="/favicons/favicon-32x32.png"
-//       />
-//       <link
-//         rel="icon"
-//         type="image/png"
-//         sizes="16x16"
-//         href="/favicons/favicon-16x16.png"
-//       />
-//       <link rel="shortcut icon" href="/favicons/favicon.ico" />
-//       <meta name="msapplication-TileColor" content={config.backgroundColor} />
-//       <meta name="msapplication-config" content="browserconfig.xml" />
-//       <meta name="description" content={description} />
-//       <meta name="image" content={image} />
-//       <script type="application/ld+json">
-//         {JSON.stringify(schemaOrgJSONLD)}
-//       </script>
-//       <meta property="og:locale" content={config.ogLanguage} />
-//       <meta property="og:site_name" content={config.ogSiteName} />
-//       <meta property="og:title" content={title} />
-//       <meta property="og:description" content={description} />
-//       <meta property="og:image" content={image} />
-//       <meta
-//         property="fb:app_id"
-//         content={config.siteFBAppID ? config.siteFBAppID : ``}
-//       />
-//       <meta name="twitter:card" content="summary_large_image" />
-//       <meta
-//         name="twitter:creator"
-//         content={config.userTwitter ? config.userTwitter : ``}
-//       />
-//       <meta name="twitter:title" content={title} />
-//       <meta name="twitter:description" content={description} />
-//       <meta name="twitter:image" content={image} />
-//     </Helmet>
-//   )
-// }
+  const schemaOrgJSONLD = [
+    {
+      '@context': `http://schema.org`,
+      '@type': `WebSite`,
+      url: siteUrl,
+      name: title,
+      alternateName: siteTitleAlt ? siteTitleAlt : ``,
+    },
+  ]
 
-// export default SEO
-export default {}
+  return (
+    <Helmet>
+      <html lang={language.id} />
+      <title>{title}</title>
+      <meta charSet="utf-8" />
+      <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="/apple-touch-icon.png?v=1"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/favicon-32x32.png?v=1"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/favicon-16x16.png?v=1"
+      />
+      <link rel="shortcut icon" href="/favicon.ico?v=1" />
+      <meta name="theme-color" content={colors.green} />
+      <meta name="msapplication-TileColor" content={colors.green} />
+      <meta name="msapplication-config" content="browserconfig.xml" />
+      <meta name="description" content={description} />
+      <meta name="image" content={imageUrl} />
+      <script type="application/ld+json">
+        {JSON.stringify(schemaOrgJSONLD)}
+      </script>
+      <meta property="og:locale" content={language.iso} />
+      <meta property="og:site_name" content={title} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={imageUrl} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={imageUrl} />
+    </Helmet>
+  )
+}
+
+SEO.propTypes = {
+  siteUrl: PropTypes.string.isRequired,
+  pageTitle: PropTypes.string.isRequired,
+  siteTitle: PropTypes.string.isRequired,
+  siteTitleAlt: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  language: PropTypes.object.isRequired,
+}
+
+export default SEO

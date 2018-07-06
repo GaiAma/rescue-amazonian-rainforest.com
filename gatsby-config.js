@@ -1,3 +1,4 @@
+const { homepage } = require(`./package.json`)
 // const config = require(`./config/website`)
 
 // const pathPrefix = config.pathPrefix === `/` ? `` : config.pathPrefix
@@ -7,9 +8,13 @@ module.exports = {
   // pathPrefix: config.pathPrefix,
   siteMetadata: {
     // siteUrl: config.siteUrl + pathPrefix,
+    title: `Rescue Amazonian Rainforest`,
+    titleAlt: `RAR`,
+    siteUrl: homepage,
   },
   mapping: {
     'MarkdownRemark.fields.translations': `MarkdownRemark`,
+    'MarkdownRemark.fields.language': `LanguagesYaml`,
   },
   /* Plugins */
   plugins: [
@@ -26,6 +31,7 @@ module.exports = {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
+          `gatsby-remark-external-links`,
           {
             resolve: `gatsby-remark-images`,
             options: { maxWidth: 590 },

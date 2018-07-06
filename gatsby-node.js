@@ -35,6 +35,13 @@ exports.onCreateNode = ({ node, actions }) => {
       value: `/${node.frontmatter.lang}/${slugify(node.frontmatter.slug)}`,
     })
   }
+  if (node.frontmatter && node.frontmatter.lang) {
+    createNodeField({
+      node,
+      name: `language`,
+      value: node.frontmatter.lang,
+    })
+  }
 }
 
 exports.createPages = async ({ actions, getNodes, graphql }) => {

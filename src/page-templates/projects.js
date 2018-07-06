@@ -6,7 +6,8 @@ import rehypeReact from 'rehype-react'
 import styled from 'react-emotion'
 import MainLayout from 'components/MainLayout'
 import PayPal from 'components/PayPal'
-import { fonts } from '../theme'
+import { media } from '../theme'
+// import { fonts } from '../theme'
 
 const renderAst = new rehypeReact({
   createElement,
@@ -17,79 +18,104 @@ const renderAst = new rehypeReact({
 
 const Card = styled.div`
   label: card;
-  /* padding: 3rem; */
-  display: flex;
+  ${media.greaterThan(`small`)} {
+    display: flex;
+  }
 
   & + & {
     margin-top: 5rem;
   }
 `
 
-const CardTitle = styled.h4`
-  label: card-title;
-  /* font-family: ${fonts.accent}; */
-  font-size: 1.15rem;
-  text-align: center;
-`
+// const CardTitle = styled.h4`
+//   label: card-title;
+//   /* font-family: ${fonts.accent}; */
+//   font-size: 1.15rem;
+//   text-align: center;
+// `
 
 const CardMeta = styled.div`
+  label: card-meta;
   /* float: left;
   margin: 0.5rem 2rem 1rem 0; */
-  margin-right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ${media.greaterThan(`small`)} {
+    margin-right: 2rem;
+  }
+`
+
+const H2 = styled.h2`
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+`
+
+const CardTitleMobile = styled(H2)`
+  margin-bottom: 2rem;
+  text-align: center;
+  ${media.greaterThan(`small`)} {
+    display: none;
+  }
+`
+const CardTitleDesktop = styled(H2)`
+  ${media.lessThan(`small`)} {
+    display: none;
+  }
 `
 
 const CardContent = styled.div`
   label: card-content;
-  margin-top: ${({ hasTitle }) => hasTitle && `2rem`};
+  /* margin-top: ${({ hasTitle }) => hasTitle && `2rem`}; */
+  ${media.lessThan(`small`)} {
+    margin-top: 2rem;
+  }
 `
 
-const RenderPartials = ({ partials, referenceLabel }) =>
+const PaypalButton = styled(PayPal)`
+  margin-top: 2rem;
+`
+
+const BankReference = styled.div`
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  text-align: center;
+`
+
+const BankDetails = styled.div`
+  margin-top: 4rem;
+`
+
+const RenderPartials = ({ partials, referenceLabel, language, logo }) =>
   partials.map(({ partial }, i) => (
     <Card key={i}>
-      {partial.frontmatter.title && (
+      {/* {partial.frontmatter.title && (
         <CardTitle>{partial.frontmatter.title}</CardTitle>
-      )}
+      )} */}
 
       <CardMeta>
+        <CardTitleMobile>{partial.frontmatter.title}</CardTitleMobile>
+
         {partial.frontmatter.image && (
           <Img fixed={partial.frontmatter.image.image.fixed} />
         )}
-        <p>
+
+        <PaypalButton
+          reference={partial.frontmatter.reference}
+          currency={language.currency}
+          language={language.iso}
+          logo={logo}
+        />
+
+        <BankReference>
           {referenceLabel}
           <br />
           <strong>{partial.frontmatter.reference}</strong>
-        </p>
-        <div>
-          <form
-            action="https://www.paypal.com/cgi-bin/webscr"
-            method="post"
-            target="_top"
-          >
-            <input type="hidden" name="cmd" value="_s-xclick" />
-            <input
-              type="hidden"
-              name="hosted_button_id"
-              value="P3TVVSJU7TZ2L"
-            />
-            <input
-              type="image"
-              src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-              border="0"
-              name="submit"
-              alt="PayPal - The safer, easier way to pay online!"
-            />
-            <img
-              alt=""
-              border="0"
-              src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif"
-              width="1"
-              height="1"
-            />
-          </form>
-        </div>
+        </BankReference>
       </CardMeta>
 
       <CardContent hasTitle={!!partial.frontmatter.title}>
+        <CardTitleDesktop>{partial.frontmatter.title}</CardTitleDesktop>
         {renderAst(partial.htmlAst)}
       </CardContent>
     </Card>
@@ -97,13 +123,18 @@ const RenderPartials = ({ partials, referenceLabel }) =>
 
 RenderPartials.propTypes = {
   partials: PropTypes.array.isRequired,
+  referenceLabel: PropTypes.string.isRequired,
+  language: PropTypes.object.isRequired,
+  logo: PropTypes.string.isRequired,
 }
 
-const RenderContentOrPartials = ({ page }) =>
+const RenderContentOrPartials = ({ page, logo }) =>
   page.frontmatter.partials && page.frontmatter.partials.length ? (
     <RenderPartials
       partials={page.frontmatter.partials}
       referenceLabel={page.frontmatter.referenceLabel}
+      language={page.fields.language}
+      logo={logo}
     />
   ) : page.htmlAst ? (
     <Card>{renderAst(page.htmlAst)}</Card>
@@ -111,25 +142,19 @@ const RenderContentOrPartials = ({ page }) =>
 
 RenderContentOrPartials.propTypes = {
   page: PropTypes.object.isRequired,
+  logo: PropTypes.string.isRequired,
 }
 
 const ProjectsPage = props => (
   <MainLayout {...props}>
-    <RenderContentOrPartials page={props.data.page} />
-    <div>
-      <pre>
-        {`Spendenkonto bei der Sparkasse Essen:
+    <RenderContentOrPartials
+      page={props.data.page}
+      logo={
+        props.data.site.siteMetadata.siteUrl + props.data.logo.image.fluid.src
+      }
+    />
 
-RESCUE AMAZONIAN RAINFOREST gUG
-
-Konto: 223 883
-BLZ: 360 501 05
-IBAN: DE26 3605 0105 0000 2238 83
-BIC: SPESDE3EXXX
-
-Als Buchungsvermerk bitte den jeweiligen Projektnamen und den Zusatz „Spende“ angeben.`}
-      </pre>
-    </div>
+    <BankDetails>{renderAst(props.data.donationPage.htmlAst)}</BankDetails>
   </MainLayout>
 )
 
@@ -153,10 +178,12 @@ export const query = graphql`
     ) {
       ...requiredMarkdownFields
       frontmatter {
+        title
         referenceLabel
         partials {
           partial: childMarkdownRemark {
             frontmatter {
+              title
               reference
               image {
                 image: childImageSharp {
@@ -170,6 +197,15 @@ export const query = graphql`
           }
         }
       }
+    }
+
+    donationPage: markdownRemark(
+      frontmatter: {
+        lang: { eq: $lang }
+        layout: { eq: "donate" }
+      }
+    ) {
+      htmlAst
     }
   }
 `
