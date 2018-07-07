@@ -4,5 +4,5 @@ ID = "rescue-amazonian-rainforest"
 [build]
   base    = "/"
   publish = "public/"
-  command = "wget -O content.tgz $RAR_CONTENT_URI && mkdir content && tar -xzf content.tgz -C content && yarn build"
+  command = "wget -O content.tgz $RAR_CONTENT_URI && mkdir content && tar -xzf content.tgz -C content && ls -lah content && yarn build"
   environment = { NODE_VERSION = "8.9.4" }
