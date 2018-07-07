@@ -1,7 +1,10 @@
+const { join } = require(`path`)
 const { homepage } = require(`./package.json`)
 // const config = require(`./config/website`)
 
 // const pathPrefix = config.pathPrefix === `/` ? `` : config.pathPrefix
+
+const isProduction = process.env.RAR_CONTENT_URI
 
 module.exports = {
   /* General Information */
@@ -23,7 +26,9 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/`,
+        path: isProduction
+          ? join(__dirname, `content`)
+          : join(__dirname, `..`, `content`),
         name: `content`,
       },
     },

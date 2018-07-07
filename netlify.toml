@@ -1,0 +1,8 @@
+[Settings]
+ID = "rescue-amazonian-rainforest"
+
+[build]
+  base    = "/"
+  publish = "public/"
+  command = "wget -O content.tgz $RAR_CONTENT_URI && npm rebuild sharp && mkdir content && tar -xzf content.tgz -C content && yarn build"
+  environment = { NODE_VERSION = "8.9.4" }
