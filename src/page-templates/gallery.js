@@ -108,7 +108,7 @@ export const query = graphql`
 
     assets: allFile(
       filter: { relativePath: { regex: "/gallery/assets/" } }
-      sort: { fields: [birthTime], order: DESC }
+      sort: { fields: [ctime], order: DESC }
     ) {
       edges {
         node {
