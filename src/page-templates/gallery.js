@@ -55,15 +55,15 @@ class RenderGrid extends Component {
     return (
       <Grid>
         {this.props.images.length &&
-          this.props.images.map(({ node }, index) => (
+          this.props.images.map(({ image }, index) => (
             <GridItem
-              key={node.image.fluid.src}
-              aspectRatio={node.image.fluid.aspectRatio}
+              key={image.fluid.src}
+              aspectRatio={image.fluid.aspectRatio}
               onClick={this.selectItem(index)}
               isSelected={this.state.index === index}
               index={index}
             >
-              <Img fluid={node.image.fluid} />
+              <Img fluid={image.fluid} />
             </GridItem>
           ))}
       </Grid>
@@ -78,7 +78,7 @@ RenderGrid.propTypes = {
 const GalleryPage = props => (
   <MainLayout {...props}>
     {renderAst(props.data.page.htmlAst)}
-    <RenderGrid images={props.data.assets.edges} />
+    <RenderGrid images={props.data.page.frontmatter.assets} />
   </MainLayout>
 )
 
@@ -103,15 +103,7 @@ export const query = graphql`
       ...requiredMarkdownFields
       frontmatter {
         title
-      }
-    }
-
-    assets: allFile(
-      filter: { relativePath: { regex: "/gallery/assets/" } }
-      sort: { fields: [ctime], order: DESC }
-    ) {
-      edges {
-        node {
+        assets {
           image: childImageSharp {
             original {
               width
