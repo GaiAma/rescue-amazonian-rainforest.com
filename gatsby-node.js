@@ -22,6 +22,7 @@ const getGroup = node => {
 const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
 
 exports.onCreateNode = ({ node, actions }) => {
+  isPage(node) && console.log(node)
   const { createNodeField } = actions
   createNodeField({
     node,
