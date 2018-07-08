@@ -1,7 +1,7 @@
 {
   "name": "rescue-amazonian-rainforest.com",
   "description": "Website of Rescue Amazonian Rainforest gUG",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Can Rau <cansrau@gmail.com>",
   "homepage": "https://www.rescue-amazonian-rainforest.com",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "date-fns": "^1.29.0",
     "emotion": "^9.1.3",
     "emotion-server": "^9.1.3",
-    "gatsby": "^2.0.0-beta.1",
+    "gatsby": "2.0.0-beta.14",
     "gatsby-image": "^2.0.0-beta.2",
     "gatsby-link": "^2.0.0-beta.2",
     "gatsby-plugin-emotion": "^2.0.0-beta.2",
