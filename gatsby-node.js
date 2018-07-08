@@ -1,49 +1,49 @@
-// const { resolve } = require(`path`)
-// const slugify = require(`slugify`)
-// const { compose, groupWith, last, takeLast, head } = require(`ramda`)
+const { resolve } = require(`path`)
+const slugify = require(`slugify`)
+const { compose, groupWith, last, takeLast, head } = require(`ramda`)
 
-// const isPage = node =>
-//   /\/content\/pages\/[^_]+\/index\.[^/]+/.test(node.fileAbsolutePath)
+const isPage = node =>
+  /\/content\/pages\/[^_]+\/index\.[^/]+/.test(node.fileAbsolutePath)
 
-// const getNLast = n =>
-//   compose(
-//     head,
-//     takeLast(n)
-//   )
+const getNLast = n =>
+  compose(
+    head,
+    takeLast(n)
+  )
 
-// const getGroup = node => {
-//   const absolutePath = node.fileAbsolutePath.split(`/`)
-//   const filename = last(absolutePath)
-//   return filename.indexOf(`index`) === 0
-//     ? getNLast(3)(absolutePath)
-//     : getNLast(2)(absolutePath)
-// }
+const getGroup = node => {
+  const absolutePath = node.fileAbsolutePath.split(`/`)
+  const filename = last(absolutePath)
+  return filename.indexOf(`index`) === 0
+    ? getNLast(3)(absolutePath)
+    : getNLast(2)(absolutePath)
+}
 
-// const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
+const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
 
-// exports.onCreateNode = ({ node, actions }) => {
-//   isPage(node) && console.log(node)
-//   const { createNodeField } = actions
-//   createNodeField({
-//     node,
-//     name: `isPage`,
-//     value: isPage(node),
-//   })
-//   if (isPage(node)) {
-//     createNodeField({
-//       node,
-//       name: `slug`,
-//       value: `/${node.frontmatter.lang}/${slugify(node.frontmatter.slug)}`,
-//     })
-//   }
-//   if (node.frontmatter && node.frontmatter.lang) {
-//     createNodeField({
-//       node,
-//       name: `language`,
-//       value: node.frontmatter.lang,
-//     })
-//   }
-// }
+exports.onCreateNode = ({ node, actions }) => {
+  isPage(node) && console.log(node)
+  const { createNodeField } = actions
+  createNodeField({
+    node,
+    name: `isPage`,
+    value: isPage(node),
+  })
+  if (isPage(node)) {
+    createNodeField({
+      node,
+      name: `slug`,
+      value: `/${node.frontmatter.lang}/${slugify(node.frontmatter.slug)}`,
+    })
+  }
+  if (node.frontmatter && node.frontmatter.lang) {
+    createNodeField({
+      node,
+      name: `language`,
+      value: node.frontmatter.lang,
+    })
+  }
+}
 
 // exports.createPages = async ({ actions, getNodes, graphql }) => {
 //   const { createPage, createNodeField } = actions
@@ -109,15 +109,15 @@
 //   return true
 // }
 
-// exports.onCreateBabelConfig = ({ actions: { setBabelPlugin } }) => {
-//   // setBabelPlugin({ name: `babel-plugin-tailwind` })
-//   setBabelPlugin({ name: `babel-plugin-emotion` })
-// }
+exports.onCreateBabelConfig = ({ actions: { setBabelPlugin } }) => {
+  // setBabelPlugin({ name: `babel-plugin-tailwind` })
+  setBabelPlugin({ name: `babel-plugin-emotion` })
+}
 
-// exports.onCreateWebpackConfig = ({ actions }) => {
-//   actions.setWebpackConfig({
-//     resolve: {
-//       modules: [resolve(__dirname, `src`), `node_modules`],
-//     },
-//   })
-// }
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      modules: [resolve(__dirname, `src`), `node_modules`],
+    },
+  })
+}
