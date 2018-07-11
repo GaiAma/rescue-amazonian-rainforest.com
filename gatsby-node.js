@@ -1,7 +1,7 @@
 const { resolve, join } = require(`path`)
 const { writeFileSync } = require(`fs`)
 const slugify = require(`slugify`)
-const { compose, groupWith, last, takeLast, head } = require(`ramda`)
+const { compose, groupWith, last, takeLast, head, sortBy } = require(`ramda`)
 const { homepage } = require(`./package.json`)
 
 const publicDir = join(__dirname, `public`)
@@ -18,17 +18,19 @@ const getNLast = n =>
 const getGroup = node => {
   const absolutePath = node.fileAbsolutePath.split(`/`)
   const filename = last(absolutePath)
-  // console.log(
-  //   filename.indexOf(`index`) === 0
-  //     ? getNLast(3)(absolutePath)
-  //     : getNLast(2)(absolutePath)
-  // )
   return filename.indexOf(`index`) === 0
     ? getNLast(3)(absolutePath)
     : getNLast(2)(absolutePath)
 }
 
+const sortByDirectory = sortBy(getGroup)
+
 const groupByPage = groupWith((a, b) => getGroup(a) === getGroup(b))
+
+const translationGroups = compose(
+  groupByPage,
+  sortByDirectory
+)
 
 const redirections = [
   // Redirect default Netlify subdomain to primary domain
@@ -118,11 +120,12 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
 
   const pages = getNodes().filter(isPage)
 
+  // console.log(pages.map(n => n.fields.slug))
   // debugging auto translation mapping
-  console.log(groupByPage(pages).map(g => g.map(x => x.fields.slug)))
-  // process.exit()
+  console.log(translationGroups(pages).map(g => g.map(x => x.fields.slug)))
+  process.exit()
 
-  groupByPage(pages).forEach(group =>
+  translationGroups(pages).forEach(group =>
     group.forEach((node, index, array) =>
       createNodeField({
         node,
