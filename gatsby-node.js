@@ -123,7 +123,7 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
   // console.log(pages.map(n => n.fields.slug))
   // debugging auto translation mapping
   console.log(translationGroups(pages).map(g => g.map(x => x.fields.slug)))
-  process.exit()
+  // process.exit()
 
   translationGroups(pages).forEach(group =>
     group.forEach((node, index, array) =>
