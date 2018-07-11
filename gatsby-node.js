@@ -18,6 +18,11 @@ const getNLast = n =>
 const getGroup = node => {
   const absolutePath = node.fileAbsolutePath.split(`/`)
   const filename = last(absolutePath)
+  // console.log(
+  //   filename.indexOf(`index`) === 0
+  //     ? getNLast(3)(absolutePath)
+  //     : getNLast(2)(absolutePath)
+  // )
   return filename.indexOf(`index`) === 0
     ? getNLast(3)(absolutePath)
     : getNLast(2)(absolutePath)
@@ -112,7 +117,11 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
   })
 
   const pages = getNodes().filter(isPage)
-  // console.log(groupByPage(pages))
+
+  // debugging auto translation mapping
+  console.log(groupByPage(pages).map(g => g.map(x => x.fields.slug)))
+  // process.exit()
+
   groupByPage(pages).forEach(group =>
     group.forEach((node, index, array) =>
       createNodeField({
