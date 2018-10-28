@@ -19,19 +19,19 @@ const Card = styled.div`
   label: card;
   /* padding: 3rem; */
 
-  .gatsby-image-outer-wrapper {
+  .gatsby-image-wrapper {
     text-align: center;
     margin-top: 2rem;
     ${media.greaterThan(`small`)} {
       float: right;
-      margin: 2.5rem 0 0 1rem;
+      margin: 2.5rem 0 1rem 1rem;
     }
   }
 
   & + & {
     margin-top: 3rem;
 
-    .gatsby-image-outer-wrapper {
+    .gatsby-image-wrapper {
       text-align: center;
       margin-top: 2rem;
       ${media.greaterThan(`small`)} {
