@@ -302,7 +302,7 @@ class Wrapper extends React.Component {
         <ul>
           {mainMenu.map(({ node: m }) => (
             <li key={m.fields.slug}>
-              <Link to={m.fields.slug} activeClassName="active" exact>
+              <Link to={m.fields.slug} activeClassName="active">
                 {m.frontmatter.title}
               </Link>
             </li>
@@ -457,7 +457,7 @@ MainLayout.propTypes = {
 export default MainLayout
 
 export const Fragments = graphql`
-  fragment MainLayoutDependencies on RootQueryType {
+  fragment MainLayoutDependencies on Query {
     site {
       siteMetadata {
         title
