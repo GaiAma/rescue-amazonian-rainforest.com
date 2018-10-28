@@ -4,6 +4,8 @@ const slugify = require(`slugify`)
 const { compose, groupWith, last, takeLast, head, sortBy } = require(`ramda`)
 const { homepage } = require(`./package.json`)
 
+// const isProduction = process.env.RAR_CONTENT_URI
+
 const publicDir = join(__dirname, `public`)
 
 const isPage = node =>
@@ -120,13 +122,8 @@ exports.createPages = async ({ actions, getNodes, graphql }) => {
 
   const pages = getNodes().filter(isPage)
 
-  // console.log(pages.map(n => n.fields.slug))
-  // debugging auto translation mapping
-  console.log(translationGroups(pages).map(g => g.map(x => x.fields.slug)))
-  // process.exit()
-
   translationGroups(pages).forEach(group =>
-    group.forEach((node, index, array) =>
+    group.forEach((node, _, array) =>
       createNodeField({
         node,
         name: `translations`,
